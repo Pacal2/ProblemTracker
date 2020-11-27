@@ -13,12 +13,13 @@ import java.time.Instant;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name="token")
 public class VerificationCode {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long codeId;
-    private String code;
+    private Long id;
+    private String token;
     @OneToOne(fetch = FetchType.LAZY)
-    private Users user;
+    private User user;
     private Instant expirationDate;
 }

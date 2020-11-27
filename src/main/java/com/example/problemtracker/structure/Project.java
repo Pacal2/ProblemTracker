@@ -8,7 +8,6 @@ import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Null;
 import java.util.List;
 
 @Data
@@ -27,7 +26,7 @@ public class Project {
     private String description;
     @NotBlank(message = "Project needs manager")
     @ManyToOne(fetch = FetchType.LAZY)
-    private Users manager;
+    private User manager;
     @Nullable
     @OneToMany(fetch = FetchType.LAZY)
     private List<Problem> assignedProblems;

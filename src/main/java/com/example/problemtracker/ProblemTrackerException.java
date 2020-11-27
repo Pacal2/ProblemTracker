@@ -1,8 +1,9 @@
 package com.example.problemtracker;
 
-public class ProblemTrackerException extends Throwable {
+public class ProblemTrackerException extends RuntimeException {
 
-    public ProblemTrackerException(String exceptionMail) {
-        super(exceptionMail);
+    public ProblemTrackerException(String exceptionMessage, Exception exception) {
+        super(exceptionMessage, exception);
     }
+
 }

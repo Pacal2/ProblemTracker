@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import java.time.Instant;
@@ -24,7 +23,7 @@ public class Comment {
     private String text;
     @NotBlank(message = "Comment has to be made by user")
     @ManyToOne(fetch = FetchType.LAZY)
-    private Users userCommented;
+    private User userCommented;
     @NotBlank(message = "Comment has to be assigned to problem")
     @ManyToOne(fetch = FetchType.LAZY)
     private Problem problemCommented;

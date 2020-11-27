@@ -8,6 +8,7 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.management.Notification;
@@ -17,13 +18,14 @@ import javax.management.Notification;
 @Slf4j
 public class MailService {
 
-    private JavaMailSender mailSender;
-    private MailContentCreator mailContentCreator;
+    private final JavaMailSender mailSender;
+    private final MailContentCreator mailContentCreator;
 
-    public void sendMail(AuthenticationEmail authenticationEmail) throws ProblemTrackerException {
+    @Async
+    public void sendMail(AuthenticationEmail authenticationEmail){
         MimeMessagePreparator mimeMessagePreparator = mimeMessage -> {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
-            mimeMessageHelper.setFrom("problemtracker2020@gmail.com");
+            mimeMessageHelper.setFrom("problemtracker2020@email.com");
             mimeMessageHelper.setTo(authenticationEmail.getRecipient());
             mimeMessageHelper.setSubject(authenticationEmail.getSubject());
             mimeMessageHelper.setText(mailContentCreator.build(authenticationEmail.getBody()));
@@ -32,7 +34,8 @@ public class MailService {
             mailSender.send(mimeMessagePreparator);
             log.info("Authentication email has been sent.");
         } catch (MailException e) {
-            throw new ProblemTrackerException("Error while sending email to " + authenticationEmail.getRecipient());
+            log.error("Exception occured when sending mail", e);
+            throw new ProblemTrackerException("Error while sending email to " + authenticationEmail.getRecipient(), e);
         }
 
     }

@@ -1,8 +1,7 @@
 package com.example.problemtracker.controller;
 
-import com.example.problemtracker.ProblemTrackerException;
 import com.example.problemtracker.datatransfer.RegisterRequest;
-import com.example.problemtracker.service.AuthenticationService;
+import com.example.problemtracker.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,15 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/auth")
 @AllArgsConstructor
-public class AuthorizationController {
+public class AuthController {
 
-    private final AuthenticationService authenticationService;
+    private final AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signUp(@RequestBody RegisterRequest registerRequest) throws ProblemTrackerException {
-        authenticationService.signUp(registerRequest);
-        return new ResponseEntity<>("User has been registered",
-                HttpStatus.OK);
+    public ResponseEntity<String> signup(@RequestBody RegisterRequest registerRequest) {
+        authService.signup(registerRequest);
+        return new ResponseEntity<>("User has been registered", HttpStatus.OK);
 
     }
 }

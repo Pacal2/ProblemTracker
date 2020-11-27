@@ -4,7 +4,7 @@ import com.example.problemtracker.ProblemTrackerException;
 import com.example.problemtracker.repository.UsersRepository;
 import com.example.problemtracker.repository.VerificationCodeRepository;
 import com.example.problemtracker.structure.AuthenticationEmail;
-import com.example.problemtracker.structure.Users;
+import com.example.problemtracker.structure.User;
 import com.example.problemtracker.structure.VerificationCode;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,27 +12,25 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.example.problemtracker.datatransfer.RegisterRequest;
 
-import javax.management.Notification;
 import javax.transaction.Transactional;
 import java.time.Instant;
-import java.util.Random;
 import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-public class AuthenticationService {
+public class AuthService {
 
-    private final UsersRepository usersRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UsersRepository usersRepository;
     private final VerificationCodeRepository verificationCodeRepository;
     private final MailService mailService;
 
     @Transactional
-    public void signUp(RegisterRequest registerRequest) throws ProblemTrackerException {
-        Users user = new Users();
+    public void signup(RegisterRequest registerRequest) {
+        User user = new User();
         user.setUsername(registerRequest.getUsername());
-        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.setEmail(registerRequest.getEmail());
+        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.setDate(Instant.now());
         user.setAuthenticated(false);
 
@@ -40,21 +38,19 @@ public class AuthenticationService {
 
         String code = createVerificationCode(user);
         mailService.sendMail(new AuthenticationEmail(
-                "Activate your account",
-                user.getEmail(),
-                "Click this url: " +
-                        "http://localhost:8080:/api/auth/accountVerification" +
-                        code
-                ));
+                "Please Activate your Account",
+                user.getEmail(), "Thank you for signing up to Spring Reddit, " +
+                "please click on the below url to activate your account : " +
+                "http://localhost:8080/api/auth/accountVerification/" + code));
     }
 
-    private String createVerificationCode(Users user) {
-        String code = UUID.randomUUID().toString();
+    private String createVerificationCode(User user) {
+        String token  = UUID.randomUUID().toString();
         VerificationCode verificationToken = new VerificationCode();
-        verificationToken.setCode(code);
+        verificationToken.setToken(token);
         verificationToken.setUser(user);
 
         verificationCodeRepository.save(verificationToken);
-        return code;
+        return token;
     }
 }

@@ -29,7 +29,7 @@ public class Problem {
     private String description;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "managerId", referencedColumnName = "userId")
-    private Users manager;
+    private User manager;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "projectId", referencedColumnName = "projectId")
     private Project project;

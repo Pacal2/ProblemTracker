@@ -17,7 +17,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Users {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
@@ -28,7 +28,6 @@ public class Users {
     @Email
     @NotEmpty(message = "Email is required")
     private String email;
-    private String role;
     private Instant date;
     private boolean authenticated;
 }
